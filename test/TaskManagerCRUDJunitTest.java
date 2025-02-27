@@ -9,25 +9,22 @@ import java.nio.file.Paths;
 import static org.junit.jupiter.api.Assertions.*;
 
 class TaskManagerCRUDJunitTest {
-    private TaskManagerCRUD manager;
-    private static final String TEST_FILE_PATH = "test_tasks.json";
+    private TaskManagerCRUD manager= new TaskManagerCRUD();
 
     @BeforeEach
     void setUp() throws IOException{
-        if (!Files.exists(Paths.get(TEST_FILE_PATH))) {
-            Files.createFile(Paths.get(TEST_FILE_PATH));
+        if (!Files.exists(Paths.get(TaskManagerCRUD.getFilePath()))) {
+            Files.createFile(Paths.get(TaskManagerCRUD.getFilePath()));
         }
-        manager = new TaskManagerCRUD(TEST_FILE_PATH);
+        Files.write(Paths.get(TaskManagerCRUD.getFilePath()), "[]".getBytes());
+        manager = new TaskManagerCRUD();
+    }
 
-        Files.write(Paths.get(TEST_FILE_PATH), "[]".getBytes());   }
-
-    /*
     @Test
     void addTask() throws IOException {
         manager.addTask("Buy groceries");
         manager.listAllTasks();
-        String fileContent = new String(Files.readAllBytes(Paths.get(TEST_FILE_PATH)));
-
+        String fileContent = new String(Files.readAllBytes(Paths.get(TaskManagerCRUD.getFilePath())));
         assertTrue(fileContent.contains("Buy groceries"), "Task should be in the file");
     }
 
@@ -36,16 +33,17 @@ class TaskManagerCRUDJunitTest {
         manager.addTask("Buy groceries");
         manager.updateTask(1, "Buy groceries and cook dinner");
         manager.listAllTasks();
-        String fileContent = new String(Files.readAllBytes(Paths.get(TEST_FILE_PATH)));
+        String fileContent = new String(Files.readAllBytes(Paths.get(TaskManagerCRUD.getFilePath())));
         assertTrue(fileContent.contains("Buy groceries and cook dinner"),"Task description should be updated." );
     }
 
     @Test
     void deleteTask() throws IOException {
         manager.addTask("Buy groceries");
+        manager.addTask("Cook dinner");
         manager.deleteTask(1);
         manager.listAllTasks();
-        String fileContent = new String(Files.readAllBytes(Paths.get(TEST_FILE_PATH)));
+        String fileContent = new String(Files.readAllBytes(Paths.get(TaskManagerCRUD.getFilePath())));
         assertFalse(fileContent.contains("Buy groceries"), "Task should be deleted.");
     }
 
@@ -54,7 +52,7 @@ class TaskManagerCRUDJunitTest {
         manager.addTask("Buy groceries");
         manager.markInProgress(1);
         manager.listAllTasks();
-        String fileContent = new String(Files.readAllBytes(Paths.get(TEST_FILE_PATH)));
+        String fileContent = new String(Files.readAllBytes(Paths.get(TaskManagerCRUD.getFilePath())));
         assertTrue(fileContent.contains("IN_PROGRESS"), "Task status should be 'IN_PROGRESS'.");
 
     }
@@ -64,19 +62,18 @@ class TaskManagerCRUDJunitTest {
         manager.addTask("Buy groceries");
         manager.markDone(1);
         manager.listAllTasks();
-        String fileContent = new String(Files.readAllBytes(Paths.get(TEST_FILE_PATH)));
+        String fileContent = new String(Files.readAllBytes(Paths.get(TaskManagerCRUD.getFilePath())));
         assertTrue(fileContent.contains("DONE"), "Task status should be 'DONE'.");
 
     }
 
-     */
 
     @Test
     void listAllTasks() throws IOException {
         manager.addTask("Buy groceries");
         manager.listAllTasks();
-        String fileContent = new String(Files.readAllBytes(Paths.get(TEST_FILE_PATH)));
-        assertTrue(fileContent.contains("Buy groceries"), "Task with 'DONE' status should be displayed.");
+        String fileContent = new String(Files.readAllBytes(Paths.get(TaskManagerCRUD.getFilePath())));
+        assertTrue(fileContent.contains("Buy groceries"), "Tasks should include Buy groceries");
     }
 
 
@@ -88,7 +85,7 @@ class TaskManagerCRUDJunitTest {
         manager.markDone(1);
         manager.listTasksByStatus("done");
         manager.listAllTasks();
-        String fileContent = new String(Files.readAllBytes(Paths.get(TEST_FILE_PATH)));
+        String fileContent = new String(Files.readAllBytes(Paths.get(TaskManagerCRUD.getFilePath())));
         assertTrue(fileContent.contains("Buy groceries"), "Task with 'DONE' status should be displayed.");
     }
 }

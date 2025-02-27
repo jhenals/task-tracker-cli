@@ -5,9 +5,7 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -17,13 +15,13 @@ public class TaskManagerCRUD {
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private List<Task> tasks;
 
+
     public TaskManagerCRUD(){
         this.tasks= loadTasks();
     }
 
-    public TaskManagerCRUD(String filePath) {
-        this.FILE_PATH = filePath;
-        this.tasks = loadTasks();
+    public static String getFilePath() {
+        return FILE_PATH;
     }
 
     private List<Task> loadTasks(){
@@ -116,21 +114,29 @@ public class TaskManagerCRUD {
 
     private void saveTasks(){
         try{
-            BufferedWriter writer = Files.newBufferedWriter(Paths.get(FILE_PATH));
-            writer.write("[");
-            for (int i = 0; i < tasks.size(); i++) {
-                Task task = tasks.get(i);
-                writer.write(String.format("{\"id\":%d,\"description\":\"%s\",\"status\":\"%s\",\"createdAt\":\"%s\",\"updatedAt\":\"%s\"}",
-                        task.getId(), task.getDescription(), task.getStatus(), task.getCreatedAt(), task.getUpdatedAt()));
-
-                if (i < tasks.size() - 1) {
-                    writer.write(",");
-                }
-            }
-            writer.write("]");
+            String json = convertTasksToJson();
+            Files.write(Paths.get(FILE_PATH), json.getBytes());
         }catch(IOException e){
             e.printStackTrace();
         }
+    }
+
+    private String convertTasksToJson() {
+        // Manually build the JSON string for tasks (simple version)
+        StringBuilder sb = new StringBuilder("[");
+        for (int i = 0; i < tasks.size(); i++) {
+            Task task = tasks.get(i);
+            sb.append("{")
+                    .append("\"id\":").append(task.getId()).append(",")
+                    .append("\"description\":\"").append(task.getDescription()).append("\",")
+                    .append("\"status\":\"").append(task.getStatus()).append("\",")
+                    .append("\"createdAt\":\"").append(task.getCreatedAt().format(formatter)).append("\",")
+                    .append("\"updatedAt\":\"").append(task.getUpdatedAt().format(formatter)).append("\"")
+                    .append("}");
+            if (i < tasks.size() - 1) sb.append(",");
+        }
+        sb.append("]");
+        return sb.toString();
     }
 
     public void addTask(String description){
