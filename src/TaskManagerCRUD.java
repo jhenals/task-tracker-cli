@@ -9,12 +9,18 @@ import java.util.List;
 
 
 public class TaskManagerCRUD {
-    private static final String FILE_PATH= "tasks.json";
+    private static String FILE_PATH= "tasks.json";
     private List<Task> tasks;
+
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public TaskManagerCRUD(){
         this.tasks= loadTasks();
+    }
+
+    public TaskManagerCRUD(String filePath) {
+        this.FILE_PATH = filePath;
+        this.tasks = loadTasks();
     }
 
     private List<Task> loadTasks(){
