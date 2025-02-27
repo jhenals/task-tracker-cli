@@ -1,6 +1,8 @@
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import components.Status;
+import components.Task;
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,13 +20,13 @@ class TaskTestJunit5 {
 
     @Test
     void getId() {
-        assertEquals(1,task.getId(), "Task ID should be 1");
+        assertEquals(1,task.getId(), "java.Task ID should be 1");
     }
 
     @Test
     void setId() {
         task.setId(2);
-        assertEquals(2,task.getId(), "Task ID should be updated to 2");
+        assertEquals(2,task.getId(), "java.Task ID should be updated to 2");
     }
 
     @Test
@@ -46,7 +48,7 @@ class TaskTestJunit5 {
     @Test
     void setStatus() {
         task.setStatus(Status.IN_PROGRESS);
-        assertEquals(Status.IN_PROGRESS, task.getStatus(), "Status should be updated to IN_PROGRESS");
+        assertEquals(Status.IN_PROGRESS, task.getStatus(), "java.Status should be updated to IN_PROGRESS");
     }
 
     @Test

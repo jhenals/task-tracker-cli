@@ -1,3 +1,5 @@
+package utils;
+
 import java.io.IOException;
 import java.io.StreamTokenizer;
 import java.io.StringReader;
@@ -6,8 +8,6 @@ import java.util.List;
 
 public class ParserLexer {
     private static StreamTokenizer tokenizer;
-    private String token;
-
 
     public static List<String> parseCommand(String inputCommand) throws IOException {
         List<String> tokens= new ArrayList<>();
@@ -23,11 +23,11 @@ public class ParserLexer {
             switch (currentToken) {
                 case StreamTokenizer.TT_WORD:
                     token = tokenizer.sval;
-                    tokens.add(token); // Add the word token
+                    tokens.add(token);
                     break;
 
                 case StreamTokenizer.TT_NUMBER:
-                    token = String.valueOf((int) tokenizer.nval); // Always convert to an integer
+                    token = String.valueOf((int) tokenizer.nval);
                     tokens.add(token);
                     break;
 
@@ -49,8 +49,6 @@ public class ParserLexer {
         }
         return tokens;
     }
-
-
 
     private static void configure(StreamTokenizer tokenizer) {
         tokenizer.wordChars('a', 'z');

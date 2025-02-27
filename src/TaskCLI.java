@@ -1,8 +1,13 @@
+import utils.ParserLexer;
+
+import components.TaskManager;
+import utils.TaskUtils;
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
 public class TaskCLI {
-    TaskManagerCRUD manager = new TaskManagerCRUD();
+    TaskManager manager = new TaskManager();
 
     public void executeCommand(String command) throws IOException {
         List<String> token= ParserLexer.parseCommand(command);
@@ -12,7 +17,7 @@ public class TaskCLI {
 
         switch(action){
             case "man": //manual
-                printManual();
+                TaskUtils.printManual();
                 break;
             case "add":
                 manager.addTask(token.get(1));
@@ -47,33 +52,11 @@ public class TaskCLI {
         }
     }
 
-
-    private void printManual() {
-        StringBuilder sb=new StringBuilder();
-        sb.append("----------MANUAL----------\n");
-        sb.append("*Adding a new task:\n");
-        sb.append("add <id> \"<description>\"\n");
-        sb.append("*Updating an existing task:\n");
-        sb.append("update <id>\n");
-        sb.append("*Deleting an existing task:\n");
-        sb.append("delete <id>\n");
-        sb.append("*Marking a task as in progress or done:\n");
-        sb.append("mark-in-progress <id>\n");
-        sb.append("mark-done <id>\n");
-        sb.append("*Listing all tasks:\n");
-        sb.append("list\n");
-        sb.append("*Listing tasks by status:\n");
-        sb.append("list done\n");
-        sb.append("list todo\n");
-        sb.append("list in-progress\n");
-        System.out.println(sb);
-    }
-
     public static void main(String[] args) throws IOException {
         TaskCLI cli= new TaskCLI();
         Scanner scanner = new Scanner(System.in);
         System.out.println("\n");
-        System.out.println("-----Welcome to your Task Tracker-----");
+        System.out.println("-----Welcome to java.Task Tracker-----------");
         System.out.println("Type man for help");
         System.out.println("---------------------------------------");
 
