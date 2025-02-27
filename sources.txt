@@ -1,0 +1,7 @@
+C:\.My_Projects\task-tracker-cli\src\TaskCLI.java
+C:\.My_Projects\task-tracker-cli\src\components\Status.java
+C:\.My_Projects\task-tracker-cli\src\components\Task.java
+C:\.My_Projects\task-tracker-cli\src\components\TaskManager.java
+C:\.My_Projects\task-tracker-cli\src\utils\ErrorUtils.java
+C:\.My_Projects\task-tracker-cli\src\utils\ParserLexer.java
+C:\.My_Projects\task-tracker-cli\src\utils\TaskUtils.java

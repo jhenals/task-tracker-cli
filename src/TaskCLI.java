@@ -62,7 +62,7 @@ public class TaskCLI {
 
 
         while(true){
-            System.out.println("task-cli> ");
+            System.out.println("task-cli >> ");
             String command = scanner.nextLine();
             cli.executeCommand(command);
         }
