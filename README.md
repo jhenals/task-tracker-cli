@@ -58,3 +58,9 @@ java -cp out TaskCLI
 
 * Delete task <br/>
   ![image](https://github.com/user-attachments/assets/ef47a23c-d152-4aaf-931d-cb49e92c0e36)
+
+## File Storage
+Tasks are stored in a ```tasks.json``` file in the current directory. The file is created automatically if it does not exist.
+
+## Contributing
+Feel free to fork this repository and submit a pull request with improvements.
