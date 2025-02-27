@@ -19,7 +19,7 @@ cd task_tracker_cli
 2. Compile source code:
 * Generate a list of all .java files in the ```src``` directory:
 ```
-javac -d out -cp src @sources.txt
+dir /s /b src\*.java > sources.txt
 ```
 * Compile using the  ```sources.txt ``` file
 ```
@@ -30,3 +30,14 @@ javac -d out -cp src @sources.txt
 ```
 java -cp out TaskCLI
 ```
+
+## Usage
+* Run application <br />
+
+
+* Add task <br/>
+
+* Update task
+
+* Delete task
+* 
