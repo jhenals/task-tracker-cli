@@ -7,14 +7,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class TaskManager {
-    private static String FILE_PATH= "tasks.json";
-    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    private List<Task> tasks;
+    private static final String FILE_PATH= "tasks.json";
+    private final List<Task> tasks;
 
 
     public TaskManager(){
@@ -133,7 +131,7 @@ public class TaskManager {
 
         tasks.stream()
                 .filter(task -> task.getStatus() == status)
-                .forEach( task -> tasksToPrint.add(task));
+                .forEach(tasksToPrint::add);
 
         printTaskTable(tasksToPrint);
     }
@@ -141,15 +139,13 @@ public class TaskManager {
     private void printTaskTable(List<Task> tasks1) {
         System.out.printf("%-5s %-30s %-15s %-20s %-20s%n", "ID", "Description", "java.Status", "Created At", "Last Updated at");
         System.out.println("-------------------------------------------------------------------------------------------------------------------");
-        tasks1.forEach(task -> {
-            System.out.printf("%-5d %-30s %-15s %-20s %-20s%n",
-                    task.getId(),
-                    task.getDescription(),
-                    task.getStatus(),
-                    task.getCreatedAt().format(formatter),
-                    task.getUpdatedAt().format(formatter)
-            );
-        });
+        tasks1.forEach(task -> System.out.printf("%-5d %-30s %-15s %-20s %-20s%n",
+                task.getId(),
+                task.getDescription(),
+                task.getStatus(),
+                task.getCreatedAt().format(TaskUtils.formatter),
+                task.getUpdatedAt().format(TaskUtils.formatter)
+        ));
     }
 
 
