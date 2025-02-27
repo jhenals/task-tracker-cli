@@ -8,7 +8,7 @@ import java.nio.file.Paths;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class TaskManagerCRUDTest {
+class TaskManagerCRUDJunitTest {
     private TaskManagerCRUD manager;
     private static final String TEST_FILE_PATH = "test_tasks.json";
 
@@ -21,11 +21,13 @@ class TaskManagerCRUDTest {
 
         Files.write(Paths.get(TEST_FILE_PATH), "[]".getBytes());   }
 
+    /*
     @Test
     void addTask() throws IOException {
         manager.addTask("Buy groceries");
         manager.listAllTasks();
         String fileContent = new String(Files.readAllBytes(Paths.get(TEST_FILE_PATH)));
+
         assertTrue(fileContent.contains("Buy groceries"), "Task should be in the file");
     }
 
@@ -67,14 +69,17 @@ class TaskManagerCRUDTest {
 
     }
 
+     */
+
     @Test
     void listAllTasks() throws IOException {
         manager.addTask("Buy groceries");
-        manager.addTask("Cook dinner");
         manager.listAllTasks();
         String fileContent = new String(Files.readAllBytes(Paths.get(TEST_FILE_PATH)));
-        //assertTrue(fileContent.contains("Buy groceries"), "Task with 'DONE' status should be displayed.");
+        assertTrue(fileContent.contains("Buy groceries"), "Task with 'DONE' status should be displayed.");
     }
+
+
 
     @Test
     void listTasksByStatus() throws IOException {

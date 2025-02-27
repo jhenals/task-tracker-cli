@@ -5,14 +5,17 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class TaskManagerCRUD {
     private static String FILE_PATH= "tasks.json";
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private List<Task> tasks;
-
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public TaskManagerCRUD(){
         this.tasks= loadTasks();
@@ -55,19 +58,55 @@ public class TaskManagerCRUD {
     private Task parseTask(String taskJson){
         try{
             taskJson = taskJson.replace("{", "").replace("}", "").trim();
-            String[] fields = taskJson.split(",");
 
-            int id = Integer.parseInt(fields[0].split(":")[1].trim());
-            String description = fields[1].split(":")[1].trim();
-            description = description.substring(1, description.length() - 1);
-            String status = fields[2].split(":")[1].trim().replace("\"", "");
-            String createdAt= fields[3].split(":")[1].trim().replace("\"", "");
-            String updatedAt= fields[4].split(":")[1].trim().replace("\"", "");
-            Task task = new Task( id, description);
-            Status st= Status.valueOf(status.toUpperCase());
-            task.setStatus(st);
-            task.setCreatedAt(LocalDateTime.parse(createdAt,formatter));
-            task.setUpdatedAt(LocalDateTime.parse(updatedAt,formatter));
+            Pattern pattern = Pattern.compile("\"([^\"]+)\":\"([^\"]+)\"|\"([^\"]+)\":([0-9]+)");
+            Matcher matcher = pattern.matcher(taskJson);
+
+            int id = 0;
+            String description = "";
+            String status = "";
+            String createdAtStr = "";
+            String updatedAtStr = "";
+
+            while (matcher.find()) {
+                String key = matcher.group(1); // First capturing group (key)
+                String value = matcher.group(2); // Second capturing group (value for string fields)
+
+                // If group 1 and group 2 are null, it means the value is an integer (for the `id` field)
+                if (key == null) {
+                    key = matcher.group(3); // Third capturing group (key for integer fields)
+                    value = matcher.group(4); // Fourth capturing group (value for integer fields)
+                }
+
+                // Map the JSON fields to the appropriate variables
+                if (key != null) {
+                    if (key.equals("id")) {
+                        id = Integer.parseInt(value);  // Parse the integer for `id`
+                    } else if (key.equals("description")) {
+                        description = value;
+                    } else if (key.equals("status")) {
+                        status = value;
+                    } else if (key.equals("createdAt")) {
+                        createdAtStr = value;
+                    } else if (key.equals("updatedAt")) {
+                        updatedAtStr = value;
+                    }
+                }
+            }
+
+            // Define the DateTimeFormatter to match the date-time format in the JSON
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+            // Convert createdAt and updatedAt to LocalDateTime objects
+            LocalDateTime createdAt = LocalDateTime.parse(createdAtStr, formatter);
+            LocalDateTime updatedAt = LocalDateTime.parse(updatedAtStr, formatter);
+
+            // Create the Task object
+            Task task = new Task(id, description);
+            task.setId(id);
+            task.setStatus(Status.valueOf(status.toUpperCase()));  // Assuming Status is an enum
+            task.setCreatedAt(createdAt);
+            task.setUpdatedAt(updatedAt);
             return task;
         }catch (Exception e){
             e.printStackTrace();
@@ -81,11 +120,8 @@ public class TaskManagerCRUD {
             writer.write("[");
             for (int i = 0; i < tasks.size(); i++) {
                 Task task = tasks.get(i);
-                // Escape special characters in the description
-                String description = task.getDescription().replace("\"", "\\\"");
-
                 writer.write(String.format("{\"id\":%d,\"description\":\"%s\",\"status\":\"%s\",\"createdAt\":\"%s\",\"updatedAt\":\"%s\"}",
-                        task.getId(), description, task.getStatus(), task.getCreatedAt(), task.getUpdatedAt()));
+                        task.getId(), task.getDescription(), task.getStatus(), task.getCreatedAt(), task.getUpdatedAt()));
 
                 if (i < tasks.size() - 1) {
                     writer.write(",");
